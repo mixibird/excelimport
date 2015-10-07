@@ -3,8 +3,7 @@ __author__ = 'Mixibird'
 from xlrd import open_workbook
 import csv
 import datetime
-import string
-
+import xlrd
 
 def open_file(path):
     """
@@ -18,20 +17,20 @@ def open_file(path):
         print("Error opening the file")
 
 
-def find_index(libro):
+def find_index(bog):
     # print sheet names
-    names = libro.sheet_names()
-    index = names.index('1s Trend')
-    return index
+    names = bog.sheet_names()
+    indeks = names.index('1s Trend')
+    return indeks
 
 
-def add_headline(bog, index):
+def add_headline(bog, indeks):
     # Open output csv data file
     od = open('outdata.csv', 'a', encoding="ascii")
     outData = csv.writer(od, delimiter=';', lineterminator='\n')
 
     # Retrieve sheets
-    sheet_a = bog.sheet_by_index(index)
+    sheet_a = bog.sheet_by_index(indeks)
 
     # Write all rows from sheet_a to csv-file
     i = 0
@@ -44,14 +43,14 @@ def add_headline(bog, index):
     od.close()
 
 
-def add_to_csv(bog, index):
+def add_to_csv(bog, indeks):
     # Open output csv data file
     od = open('outdata.csv', 'a', encoding="utf-8")
     outData = csv.writer(od, delimiter=';', lineterminator='\n')
 
     # Retrieve sheets
-    sheet_a = bog.sheet_by_index(index)
-    sheet_b = bog.sheet_by_index(index + 1)
+    sheet_a = bog.sheet_by_index(indeks)
+    sheet_b = bog.sheet_by_index(indeks + 1)
 
     # number of rows in sheet
     count_a = sheet_a.nrows
@@ -64,20 +63,20 @@ def add_to_csv(bog, index):
         row = sheet_a.row_values(i)
 
         # inserts
-        cell_1 = sheet.cell(i, 0).value
-        cell_2 = sheet.cell(i, 1).value
+        cell_1 = row.cell(i, 0).value
+        cell_2 = row.cell(i, 1).value
         date = cell_1 + cell_2
-        print(xlrd.xldate_as_tuple(date,sheet_a.datemode))
+        print(xlrd.xldate_as_tuple(date, sheet_a.datemode))
 
         year, month, day, hour, minute, second = xlrd.xldate_as_tuple(date, sheet_a.datemode)
         py_date = datetime.datetime(year, month, day, hour, minute, second)
         print(py_date)
 
-        index = 1
-        row.insert(index, str(py_date))
+        position = 1
+        row.insert(position, str(py_date))
 
         row.pop(0)
-        print ('this is a tuple {0}'.format(row))
+        print('this is a tuple {0}'.format(row))
 
         outData.writerow(row)
         i += 1
@@ -96,11 +95,11 @@ def add_to_csv(bog, index):
         py_date = datetime.datetime(year, month, day, hour, minute, second)
         print(py_date)
 
-        index = 1
-        row.insert(index, str(py_date))
+        position = 1
+        row.insert(position, str(py_date))
 
         row.pop(0)
-        print ('this is a tuple {0}'.format(row))
+        print('this is a tuple {0}'.format(row))
         outData.writerow(row)
         i += 1
 
