@@ -2,6 +2,8 @@ __author__ = 'Mixibird'
 
 from xlrd import open_workbook
 import csv
+import datetime
+import string
 
 
 def open_file(path):
@@ -60,6 +62,23 @@ def add_to_csv(bog, index):
     i = 2
     while i < count_a:
         row = sheet_a.row_values(i)
+
+        # inserts
+        cell_1 = sheet.cell(i, 0).value
+        cell_2 = sheet.cell(i, 1).value
+        date = cell_1 + cell_2
+        print(xlrd.xldate_as_tuple(date,sheet_a.datemode))
+
+        year, month, day, hour, minute, second = xlrd.xldate_as_tuple(date, sheet_a.datemode)
+        py_date = datetime.datetime(year, month, day, hour, minute, second)
+        print(py_date)
+
+        index = 1
+        row.insert(index, str(py_date))
+
+        row.pop(0)
+        print ('this is a tuple {0}'.format(row))
+
         outData.writerow(row)
         i += 1
 
@@ -67,6 +86,21 @@ def add_to_csv(bog, index):
     i = 0
     while i < count_b:
         row = sheet_b.row_values(i)
+
+        # inserts
+        cell_1 = sheet_b.cell(i, 0).value
+        cell_2 = sheet_b.cell(i, 1).value
+        date = cell_1 + cell_2
+
+        year, month, day, hour, minute, second = xlrd.xldate_as_tuple(date, sheet_b.datemode)
+        py_date = datetime.datetime(year, month, day, hour, minute, second)
+        print(py_date)
+
+        index = 1
+        row.insert(index, str(py_date))
+
+        row.pop(0)
+        print ('this is a tuple {0}'.format(row))
         outData.writerow(row)
         i += 1
 
