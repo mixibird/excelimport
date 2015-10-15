@@ -3,7 +3,7 @@ __author__ = 'Mixibird'
 from xlrd import open_workbook
 import csv
 import datetime
-import xlrd
+import os
 
 def open_file(path):
     """
@@ -63,20 +63,20 @@ def add_to_csv(bog, indeks):
         row = sheet_a.row_values(i)
 
         # inserts
-        cell_1 = row.cell(i, 0).value
-        cell_2 = row.cell(i, 1).value
-        date = cell_1 + cell_2
-        print(xlrd.xldate_as_tuple(date, sheet_a.datemode))
+        dato = row[0]
+        tid = row[1]
+        date = dato + ' ' + tid
+        py_date = datetime.datetime.strptime(date, '%d-%m-%Y %H:%M:%S')
 
-        year, month, day, hour, minute, second = xlrd.xldate_as_tuple(date, sheet_a.datemode)
-        py_date = datetime.datetime(year, month, day, hour, minute, second)
-        print(py_date)
-
-        position = 1
-        row.insert(position, str(py_date))
-
+        # Remove the original date
         row.pop(0)
-        print('this is a tuple {0}'.format(row))
+
+        # Remove the original time
+        row.pop(0)
+
+        # Insert inverted and combined date and time
+        position = 0
+        row.insert(position, str(py_date))
 
         outData.writerow(row)
         i += 1
@@ -87,19 +87,21 @@ def add_to_csv(bog, indeks):
         row = sheet_b.row_values(i)
 
         # inserts
-        cell_1 = sheet_b.cell(i, 0).value
-        cell_2 = sheet_b.cell(i, 1).value
-        date = cell_1 + cell_2
+        dato = row[0]
+        tid = row[1]
+        date = dato + ' ' + tid
+        py_date = datetime.datetime.strptime(date, '%d-%m-%Y %H:%M:%S')
 
-        year, month, day, hour, minute, second = xlrd.xldate_as_tuple(date, sheet_b.datemode)
-        py_date = datetime.datetime(year, month, day, hour, minute, second)
-        print(py_date)
+        # Remove the original date
+        row.pop(0)
 
-        position = 1
+        # Remove the original time
+        row.pop(0)
+
+        # Insert inverted and combined date and time
+        position = 0
         row.insert(position, str(py_date))
 
-        row.pop(0)
-        print('this is a tuple {0}'.format(row))
         outData.writerow(row)
         i += 1
 
@@ -109,12 +111,15 @@ def add_to_csv(bog, indeks):
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
     fileNo = 1
+    path = '/Users/knudsenm/Documents/Drive/10 PRIVATE/\xd8mstyrelsen/'
     while fileNo < 36:  # 36 in total
         filename = 'Omborgen ' + str(fileNo) + '.xls'
         print(filename)
+        syspath = os.path.join(path, filename)
+        print(syspath)
 
         # Open first or next woorkbook (according to fileNo)
-        libro = open_file(filename)
+        libro = open_file(syspath)
 
         # Find sheet number of '1s Trend' sheet
         index = find_index(libro)
