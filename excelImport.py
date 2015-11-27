@@ -26,7 +26,7 @@ def find_index(bog):
 
 def add_headline(bog, indeks):
     # Open output csv data file
-    od = open('outdata.csv', 'a', encoding="ascii")
+    od = open('outdata.csv', 'w', encoding="utf-8")
     outData = csv.writer(od, delimiter=';', lineterminator='\n')
 
     # Retrieve sheets
@@ -39,6 +39,7 @@ def add_headline(bog, indeks):
     row = [a.replace('\u03a6', 'lambda') for a in row]
 
     outData.writerow(row)
+    print(row)
 
     od.close()
 
@@ -111,7 +112,7 @@ def add_to_csv(bog, indeks):
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
     fileNo = 1
-    path = '/Users/knudsenm/Documents/Drive/10 PRIVATE/\xd8mstyrelsen/'
+    path = '/home/mixibird/PycharmProjects/appendix'
     while fileNo < 36:  # 36 in total
         filename = 'Omborgen ' + str(fileNo) + '.xls'
         print(filename)
